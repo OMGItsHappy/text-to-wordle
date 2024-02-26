@@ -1,4 +1,5 @@
 from typing import List
+import sys
 
 b = "⬛"
 y = "🟨"
@@ -42,10 +43,17 @@ class consts:
     Y = BLACKCENTER + BLACKCENTER + BLACKCENTER + YELLOWCENTER + YELLOWCENTER
     Z = YELLOWROW + RIGHTYELLOW + YELLOWCENTER + LEFTYELLOW + YELLOWROW
     SPACE = (b+b+b+"\n")*5
+    NONLETTERS = {
+        "!" : YELLOWCENTER + YELLOWCENTER + YELLOWCENTER + BLACKCENTER + YELLOWCENTER,
+    }
 
     @staticmethod
     def getLetter(letter : str):
         try:
+
+            if letter in consts.NONLETTERS:
+                return consts.NONLETTERS[letter].split("\n")
+
             return getattr(consts, letter.upper()).split("\n")
         except:
             return consts.SPACE.split("\n")
@@ -63,15 +71,15 @@ def printMaxLength(test : str, width: int = 6):
             toAdd = []
             j = 0 
             while j < len(word):
-                textToConvert = word[j:j+5]
-                textToConvert += " " * (5 - len(textToConvert))
+                textToConvert = word[j:j+width]
+                textToConvert += " " * (width - len(textToConvert))
                 tmpStr = ""
                 for x in range(5):
                     for letter in textToConvert:
                         tmpStr += letterToSymbols(letter).split("\n")[x]
                     tmpStr += "\n"
                 toAdd.append(tmpStr)
-                j += 5
+                j += width
             
             toReturn.extend(toAdd)
 
@@ -116,4 +124,10 @@ def letterToSymbols(test : str) -> str:
 
     return str
 
-printMaxLength("It now will place stuff on the same line!", 6)
+#printMaxLength("It now will place stuff on the same line!", 6)
+
+if __name__ == "__main__":
+    inputText = sys.argv[1]
+    maxLength = int(sys.argv[2])
+
+    printMaxLength(inputText, maxLength)
